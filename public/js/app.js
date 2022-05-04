@@ -2,12 +2,42 @@ $(function() {
     console.log("Hello.")
 });
 
-$("#do-something").on("click", function() {
-    var imgSrc = $("#image").attr("src");
-    // console.log(imgSrc);
+$(document).on("click", ".btn", function() {
 
-    $.post("/render", {image: imgSrc}).done(function(data) {
-        $("#image").attr("src", "output.png")
+    if ($(this).text() == "Add Image") {
+        return;
+    }
+
+    var imageSrc;
+    var whichEffect = $(this).attr("value");
+
+    var imageObj = new Image();
+
+    stage.find('.image').forEach((eachImage) => {
+        // and we can snap to all edges of shapes
+        // console.log();
+        imageSrc = eachImage.src;
+
+        // stage.draw();
     });
 
-})
+
+
+    $.post("/render", {
+        image: imageSrc,
+        effect: whichEffect
+    }).done(function(data) {
+
+        console.log("The server finished rendering...")
+
+        stage.find('.image').forEach((eachImage) => {
+            // and we can snap to all edges of shapes
+            imageObj.onload = function() {
+                eachImage.image(imageObj)
+            }
+            imageObj.src = "output.png";
+
+        }); 
+    });
+
+});

@@ -5,21 +5,46 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link rel="stylesheet" href="css/styles.css">
+    <!-- <link rel="stylesheet" href="css/styles.css"> -->
 
+    <!-- CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/purecss@2.1.0/build/pure-min.css" integrity="sha384-yHIFVG6ClnONEA5yB5DJXfW2/KC173DIQrYoZMEtBvGzmf0PKiGyNEqe9N6BNDBH" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="css/konva.css" />
+    <link rel="stylesheet" type="text/css" href="css/styles.css" />
+
+    <!-- JS Libraries -->
+    <script src="js/lib/konva.min.js"></script>
+    <!-- <script src="js/lib/Vibrant.min.js"></script> -->
     <script src="js/lib/jquery-3.6.0.min.js"></script>
+    
+    <!-- JS App -->
+    <script src="js/konva.js"></script>
+    <script src="js/app.js"></script>
 
-    <title>Document</title>
+    <title>Image Effects</title>
 </head>
 <body>
 
     
-    <h1>Image Effects</h1>
-    <button id="do-something">Do Something</button><br />
+    <div id="container">
+        <div id="left">
+            <img id="tshirt" src="https://ourcodeworld.com/public-media/gallery/gallery-5d5afd3f1c7d6.png"/>
+            <div id="canvas"></div>
+        </div>
+        <div id="right">
+            <div id="actions">
+                <button id="add-image" class="pure-button btn">Add Image</button>
+                <button value="knockout" class="pure-button btn">Knockout White</button>
+                <button value="outline" class="pure-button btn">Outline Image</button>
+                <!-- <button value="" class="pure-button btn">Knockout White</button> -->
+                <div id="colors"></div>
+            </div>
+        </div>
+    </div>
 
-    <img id="image" src="high-quality.png" width="300px" />
-
-    <script src="js/app.js"></script>
+    <!-- JavaScript -->
+    <!-- <script src="js/konva.js"
+    <script src="js/app.js"></script> -->
 
 </body>
 </html>
