@@ -1,6 +1,7 @@
 /**
  * Largely imported from image-quality project
- * https://github.com/detonationbox0/image-quality
+ * Adapted for this purpose
+ * https://github.com/detonationbox0/image-quality/blob/main/js/app.js
  */
 
 var stage;
@@ -469,17 +470,36 @@ $(function() {
 
 });
 
-// User clicks the Add Imgae button
-console.log("Attaching event...")
-$(document).on("click", "#add-image", function() {
+/**
+ * User clicks an Add Image button
+ */
+$(document).on("click", ".add-image", function() {
 
     console.log("Add image clicked");
 
-    //#region
-    addImage("high-quality.png");
-    // addImage("/image-quality/high-quality.png");
-    
-    //#endregion
+    // Which file shall we add?
+    var file = $(this).attr("value");
+
+    // We will need to convert this to a PNG file if it's a PSD
+    var ext = file.split(".").pop();
+
+    if (ext == "psd") {
+        // Convert to a PNG file
+        // Show the loader
+        $("#wait").css("display", "flex");
+        // API call (server.js)
+        $.post("/convert", {filename:file}, function(pngFile) {
+            console.log(pngFile);
+            addImage(pngFile);
+            // Hide the loader
+            $("#wait").hide();
+            return;
+        });
+    } else {
+        addImage(file);
+        $("#wait").hide();
+    }
+
 });
 
 /**
@@ -488,7 +508,10 @@ $(document).on("click", "#add-image", function() {
  */
 function addImage(url) {
 
-   
+    
+    // If the image is a PSD file, convert it to a PNG first.
+
+
     // Create Image Node to be added to the layer
     // Konva.Image.fromURL('/ubiquitous-giggle/lq.png', function (imgNode) { // <- This line is for GitHub's relative link
     Konva.Image.fromURL(url, function (imgNode) { // <- This line is for GitHub's relative link
@@ -507,9 +530,30 @@ function addImage(url) {
             scaleX: scaleFactor,
             scaleY: scaleFactor,
             draggable: true,
-            name:"image"
-            // id:"image"
+            name:"selectable",
+            id:"effect-image"
         });
+
+        // Possible Effects
+        imgNode.cache();
+        imgNode.filters([Konva.Filters.Blur]);
+        // imgNode.filters([Konva.Filters.Brighten]);
+        // imgNode.filters([Konva.Filters.Contrast]);
+        // imgNode.filters([Konva.Filters.Emboss]);
+        // imgNode.filters([Konva.Filters.Enhance]);
+        // imgNode.filters([Konva.Filters.Grayscale]);
+        // imgNode.filters([Konva.Filters.HSL]);
+        // imgNode.filters([Konva.Filters.HSV]);
+        // imgNode.filters([Konva.Filters.Invert]);
+        // imgNode.filters([Konva.Filters.Mask]);
+        // imgNode.filters([Konva.Filters.Noise]);
+        // imgNode.filters([Konva.Filters.Pixelate]);
+        // imgNode.filters([Konva.Filters.Posterize]);
+        // imgNode.filters([Konva.Filters.RGB]);
+        // imgNode.filters([Konva.Filters.RGBA]);
+        // imgNode.filters([Konva.Filters.Sepia]);
+        // imgNode.filters([Konva.Filters.Solarize]);
+        // imgNode.filters([Konva.Filters.Threshold]);
 
         // Add the Image Node to the Layer
         layer.add(imgNode);
@@ -520,6 +564,7 @@ function addImage(url) {
 
         // Draw the layer
         layer.draw();
+        
 
 
         // Attach events to the Image Node

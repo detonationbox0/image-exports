@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="https://unpkg.com/purecss@2.1.0/build/pure-min.css" integrity="sha384-yHIFVG6ClnONEA5yB5DJXfW2/KC173DIQrYoZMEtBvGzmf0PKiGyNEqe9N6BNDBH" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="css/konva.css" />
     <link rel="stylesheet" type="text/css" href="css/styles.css" />
+    <link rel="stylesheet" type="text/css" href="css/loaders.min.css" />
 
     <!-- JS Libraries -->
     <script src="js/lib/konva.min.js"></script>
@@ -25,7 +26,15 @@
 </head>
 <body>
 
-    
+    <div id="wait">
+        <div class="loader-inner pacman">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </div> 
     <div id="container">
         <div id="left">
             <img id="tshirt" src="https://ourcodeworld.com/public-media/gallery/gallery-5d5afd3f1c7d6.png"/>
@@ -33,9 +42,31 @@
         </div>
         <div id="right">
             <div id="actions">
-                <button id="add-image" class="pure-button btn">Add Image</button>
-                <button value="knockout" class="pure-button btn">Knockout White</button>
-                <button value="outline" class="pure-button btn">Outline Image</button>
+                <pre>Add Images (konva.js)</pre>
+                <div class="button-group">
+                    <button value="shark.png" class="pure-button btn add-image">Add Shark</button>
+                    <button value="rooster.jpg" class="pure-button btn add-image">Add Rooster</button>
+                    <button value="trees.jpg" class="pure-button btn add-image">Add Trees</button>
+                    <button value="photoshop.psd" class="pure-button btn add-image">Add PSD</button>
+                </div>
+                <pre>ImageMagic Effects (app.js)</pre>
+                <div class="button-group">
+                    <button value="knockout" class="pure-button btn magick-effect">Knockout White</button>
+                    <button value="paint" class="pure-button btn magick-effect">Paint Image</button>
+                </div>
+                <pre>Konva Effects (app.js)</pre>
+                <div class="button-group">
+                    <label class="effect-label">Grayscale<br />
+                        <input type="range" min="1" max="100" value="50" class="slider" id="grayscale-slide" />
+                    </label>
+                    <!-- <button value="grayscale" class="pure-button btn konva-effect">Grayscale</button> -->
+                    <!-- <button value="paint" class="pure-button btn konva-effect">Paint Image</button> -->
+                </div>
+                <pre>Export</pre>
+                <div class="button-group">
+                    
+                    <button id="download" class="pure-button btn">Download Image</button>
+                </div>
                 <!-- <button value="" class="pure-button btn">Knockout White</button> -->
                 <div id="colors"></div>
             </div>
