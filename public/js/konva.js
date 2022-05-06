@@ -536,7 +536,7 @@ function addImage(url) {
 
         // Possible Effects
         imgNode.cache();
-        imgNode.filters([Konva.Filters.Blur]);
+        // imgNode.filters([Konva.Filters.Blur]);
         // imgNode.filters([Konva.Filters.Brighten]);
         // imgNode.filters([Konva.Filters.Contrast]);
         // imgNode.filters([Konva.Filters.Emboss]);
@@ -598,3 +598,4 @@ function addImage(url) {
 
     });
 }
+

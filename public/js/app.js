@@ -34,6 +34,7 @@ $(document).on("click", ".magick-effect", function() {
         };
 
         imageObj.src = outFileName; 
+        // tr.forceUpdate();
         $("#wait").hide(); // Hide the loading animation
     });
 });
@@ -44,7 +45,7 @@ $(document).on("click", ".magick-effect", function() {
  $(document).on("click", ".konva-effect", function() {
 
     var imgNode = tr.nodes()[0];
-    var newImg = new Image();
+    var newImg = new Konva.Image();
     newImg.onload = function() {
         imgNode.image(this);
         imgNode.filters([Konva.Filters.Enhance]);
@@ -59,9 +60,9 @@ $(document).on("click", ".magick-effect", function() {
  /**
   * User slides the Konva grayscale slider
   */
-  $(document).on("mousemove", "#grayscale-slide", function() {
-    console.log($(this).val())
-  })
+//   $(document).on("mousemove", "#grayscale-slide", function() {
+//     console.log($(this).val())
+//   })
 
 
 /**

@@ -25,6 +25,7 @@ app.post("/render", (req, res) => {
     var imagePath = `${__dirname}/public/${req.body.image}`; // image from Konva in the front end
     var fileName = req.body.image.split('.').slice(0, -1).join('.');
     var outFileName = `${fileName}_output.png`;
+    console.log(outFileName);
     var outPath = `${__dirname}/public/${outFileName}`
 
 
@@ -48,7 +49,7 @@ app.post("/render", (req, res) => {
                     return;
                 }
 
-                console.log("Converted.");
+                console.log(`Converted. Feeding back: ${outFileName}`);
                 res.send(outFileName);
             });
 
