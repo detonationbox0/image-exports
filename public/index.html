@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="https://unpkg.com/purecss@2.1.0/build/pure-min.css" integrity="sha384-yHIFVG6ClnONEA5yB5DJXfW2/KC173DIQrYoZMEtBvGzmf0PKiGyNEqe9N6BNDBH" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="css/konva.css" />
     <link rel="stylesheet" type="text/css" href="css/styles.css" />
+
     <link rel="stylesheet" type="text/css" href="css/loaders.min.css" />
 
     <!-- JS Libraries -->
@@ -53,12 +54,31 @@
                 <div class="button-group">
                     <button value="knockout" class="pure-button btn magick-effect">Knockout White</button>
                     <button value="paint" class="pure-button btn magick-effect">Paint Image</button>
+                    <button value="canny" class="pure-button btn magick-effect">Canny</button>
+                    <button value="pencil" class="pure-button btn magick-effect">Pencil</button>
+                    <button value="swirl" class="pure-button btn magick-effect">Swirl</button>
+                    <button value="negate" class="pure-button btn magick-effect">Negate</button>
+                    <button value="wave" class="pure-button btn magick-effect">Wave</button>
+                    <button value="glass" class="pure-button btn magick-effect">Frosted Glass</button>
+                    <button value="thermal" class="pure-button btn magick-effect">Thermal</button>
+                    <button value="toon" class="pure-button btn magick-effect">Toon</button>
+                    <button value="swap" class="pure-button btn magick-effect">Swap R & B Channels</button>
                 </div>
                 <pre>Konva Effects (app.js)</pre>
                 <div class="button-group">
-                    <label class="effect-label">Grayscale<br />
-                        <input type="range" min="1" max="100" value="50" class="slider" id="grayscale-slide" />
+                    <label class="effect-label">Blur<br />
+                        <input autocomplete="off" type="range" min="1" max="100" value="0" class="slider" id="blur-slide" />
+                    </label><br />
+                    <label class="effect-label">Brighten<br />
+                        <input autocomplete="off" type="range" min="-1.0" max="1.0" step="0.1" value="0" class="slider" id="brighten-slide" />
+                    </label><br />
+                    <label class="effect-label">Contrast<br />
+                        <input autocomplete="off" type="range" min="-100" max="100" value="0" class="slider" step="1" id="contrast-slide" />
+                    </label><br />
+                    <label class="effect-label">Emboss (Strength)<br />
+                        <input autocomplete="off" type="range" min="-1" max="1" value="0" class="slider" step="0.1" id="emboss-slide-strength" />
                     </label>
+
                     <!-- <button value="grayscale" class="pure-button btn konva-effect">Grayscale</button> -->
                     <!-- <button value="paint" class="pure-button btn konva-effect">Paint Image</button> -->
                 </div>

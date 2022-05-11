@@ -14,7 +14,7 @@ $(document).on("click", ".magick-effect", function() {
 
     var imageObj = new Image(); // Used after post to relink the source
 
-    console.log(tr);
+    // console.log(tr);
 
     var imgNode = tr.nodes()[0]; // Get the selection
     var imageSrc = $(imgNode.image()).attr("src"); // Current src of the image
@@ -30,39 +30,148 @@ $(document).on("click", ".magick-effect", function() {
         
         // Relink the image to the output.png
         imageObj.onload = function() {
+            imgNode.clearCache();
             imgNode.image(imageObj);
         };
-
+        // imageObj.clearCache();
         imageObj.src = outFileName; 
-        // tr.forceUpdate();
+        // tr.forceUpdate();*/
+        // console.log(imgNode);
+        // imgNode.image(outFileName);
+
+
         $("#wait").hide(); // Hide the loading animation
     });
 });
 
-/**
- * User clicks on a Konva image effect
+/** ----------------------------------------------------------------------------
+ *  KONVA EFFECTS
+ *  ----------------------------------------------------------------------------
  */
- $(document).on("click", ".konva-effect", function() {
 
+/* ---------------------------------------------------------------------------- *
+ * BLUR
+ */
+$(document).on("input", "#blur-slide", function() {
+//#region
+    var effectPercent = $(this).val();
     var imgNode = tr.nodes()[0];
-    var newImg = new Konva.Image();
-    newImg.onload = function() {
-        imgNode.image(this);
-        imgNode.filters([Konva.Filters.Enhance]);
+    // Cache the image, if it's not cached (required for effects)
+    if (imgNode.isCached() == false) {
+        imgNode.cache()
     }
-    newImg.src = "rooster.jpg"
 
-    // imgNode.filters([Konva.Filters.Enhance]); 
+    // Add the filter if it's not there yet
+    addFilter(imgNode, Konva.Filters.Blur, "Blur");
+
+    console.log(`Blur ${effectPercent}%`);
+    imgNode.blurRadius(effectPercent);
+//#endregion
+});
+
+ 
+
+/* ---------------------------------------------------------------------------- *
+* BRIGHTEN 
+*/
+$(document).on("input", "#brighten-slide", function() {
+//#region
+    var effectPercent = $(this).val();
+    var imgNode = tr.nodes()[0];
+    // Cache the image, if it's not cached (required for effects)
+    if (imgNode.isCached() == false) {
+        imgNode.cache();
+    }
+
+    // Add the filter if it's not there yet
+    addFilter(imgNode, Konva.Filters.Brighten, "Brighten");
+
+    console.log(`Brighten ${effectPercent}%`);
+    imgNode.brightness(effectPercent);
+
+//#endregion
+});
+
+/* ---------------------------------------------------------------------------- *
+* BRIGHTEN 
+*/
+$(document).on("input", "#contrast-slide", function() {
+//#region
+    var effectPercent = $(this).val();
+    var imgNode = tr.nodes()[0];
+    // Cache the image, if it's not cached (required for effects)
+    if (imgNode.isCached() == false) {
+        imgNode.cache();
+    }
+
+    // Add the filter if it's not there yet
+    addFilter(imgNode, Konva.Filters.Contrast, "Contrast");
+    // console.log(`Contrast ${effectPercent}%`);
+    console.log(effectPercent);
+    imgNode.contrast(effectPercent);
+
+//#endregion
+});
+
+  
+
+/* ---------------------------------------------------------------------------- *
+*  EMBOSS 
+*/
+$(document).on("input", "#emboss-slide-strength", function() {
+//#region
+    var effectPercent = $(this).val();
+    var imgNode = tr.nodes()[0];
+    // Cache the image, if it's not cached (required for effects)
+    if (imgNode.isCached() == false) {
+        imgNode.cache();
+    }
 
 
- });
+    // Add the filter if it's not there yet
+    addFilter(imgNode, Konva.Filters.Emboss, "Emboss");
+    console.log(`Emboss (Strength) ${effectPercent}%`);
+    imgNode.embossStrength(effectPercent);
+//#endregion
+});
 
- /**
-  * User slides the Konva grayscale slider
-  */
-//   $(document).on("mousemove", "#grayscale-slide", function() {
-//     console.log($(this).val())
-//   })
+
+
+/**
+ * Check if filter is already on Image. If not, add it
+ * @param {Konva Image} imgNode The image node we are looking at
+ * @param {Konva Filter} filter The filter to add if it's not there
+ * @param {String} filterString The name of the filter, used as the lookup
+ * @returns
+ */
+function addFilter (imgNode, filter, filterString) {
+//#region
+    var filters = imgNode.filters();
+
+    // is imgNode.filters() null? If so, there's no effect so just add it
+    if (filters === null) {
+        imgNode.filters([filter]);
+        return
+    }
+
+    // Does the filter exist already?
+    var filterExists = false;
+    imgNode.filters().forEach(function(filter) {
+        if (filter.name === filterString) {
+            filterExists = true;
+            return;
+        }
+    }); 
+
+    if (filterExists === false) {
+        // Filter is not there, add it
+        filters.push(filter);
+        imgNode.filters(filters);
+    }
+
+    return
+//#endregion
+}
 
 
 /**
