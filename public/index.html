@@ -26,7 +26,21 @@
     <title>Image Effects</title>
 </head>
 <body>
+    <div id="output-preview">
+        <div id="without-button">
+            <div class="img">
+                <h5>Full Output <span id='full-w' class="dim"></span> x <span id='full-h' class="dim"></span> </h5>
+                <img src="Front_Original.png" id="img-full" class="img-preview" />
+            </div>
+            <div class="img">
+                <h5>Trimmed <span id='trim-w' class="dim"></span> x <span id='trim-h' class="dim"></span></h5>
+                <img src="Front_trim.png" id="img-trim" class="img-preview" />
+            </div>
+        </div>
+        <button class="pure-button pure-button-primary btn" id="close">Close</button>
+        <!-- <button class="pure-button pure-button-primary btn" id="close">Download</button> -->
 
+    </div>
     <div id="wait">
         <div class="loader-inner pacman">
             <div></div>
@@ -48,9 +62,14 @@
                     <button value="shark.png" class="pure-button btn add-image">Add Shark</button>
                     <button value="rooster.jpg" class="pure-button btn add-image">Add Rooster</button>
                     <button value="trees.jpg" class="pure-button btn add-image">Add Trees</button>
+                    <button value="pizza-man.jpg" class="pure-button btn add-image">Add Pizza Man</button>
+                    <button value="toy-car.jpg" class="pure-button btn add-image">Add Toy Car</button>
+                    <button value="creeper.svg" class="pure-button btn add-image">Add Creeper (SVG)</button><br />
                     <button value="photoshop.psd" class="pure-button btn add-image">Add PSD</button>
+                    <!-- <button value="illustrator.ai" class="pure-button btn add-image">Add AI</button>
+                    <button value="pdf.pdf" class="pure-button btn add-image">Add PDF</button> -->
                 </div>
-                <pre>ImageMagic Effects (app.js)</pre>
+                <pre>ImageMagic Effects (server.js)</pre>
                 <div class="button-group">
                     <button value="knockout" class="pure-button btn magick-effect">Knockout White</button>
                     <button value="paint" class="pure-button btn magick-effect">Paint Image</button>
@@ -61,27 +80,122 @@
                     <button value="wave" class="pure-button btn magick-effect">Wave</button>
                     <button value="glass" class="pure-button btn magick-effect">Frosted Glass</button>
                     <button value="thermal" class="pure-button btn magick-effect">Thermal</button>
-                    <button value="toon" class="pure-button btn magick-effect">Toon</button>
+                    <!-- <button value="toon" class="pure-button btn magick-effect">Toon</button> -->
+                    <button value="crystal" class="pure-button btn magick-effect">Crystal</button>
                     <button value="swap" class="pure-button btn magick-effect">Swap R & B Channels</button>
                 </div>
                 <pre>Konva Effects (app.js)</pre>
-                <div class="button-group">
-                    <label class="effect-label">Blur<br />
-                        <input autocomplete="off" type="range" min="1" max="100" value="0" class="slider" id="blur-slide" />
-                    </label><br />
-                    <label class="effect-label">Brighten<br />
-                        <input autocomplete="off" type="range" min="-1.0" max="1.0" step="0.1" value="0" class="slider" id="brighten-slide" />
-                    </label><br />
-                    <label class="effect-label">Contrast<br />
-                        <input autocomplete="off" type="range" min="-100" max="100" value="0" class="slider" step="1" id="contrast-slide" />
-                    </label><br />
-                    <label class="effect-label">Emboss (Strength)<br />
-                        <input autocomplete="off" type="range" min="-1" max="1" value="0" class="slider" step="0.1" id="emboss-slide-strength" />
-                    </label>
+                <div id="konva-stuff">
 
-                    <!-- <button value="grayscale" class="pure-button btn konva-effect">Grayscale</button> -->
-                    <!-- <button value="paint" class="pure-button btn konva-effect">Paint Image</button> -->
+                    <div class="konva-group">
+                        <label class="effect-label">Blur<br />
+                            <input autocomplete="off" type="range" min="1" max="100" value="0" class="slider" id="blur-slide" />
+                        </label><br />
+                        <label class="effect-label">Brighten<br />
+                            <input autocomplete="off" type="range" min="-1.0" max="1.0" step="0.1" value="0" class="slider" id="brighten-slide" />
+                        </label><br />
+                        <label class="effect-label">Contrast<br />
+                            <input autocomplete="off" type="range" min="-100" max="100" value="0" class="slider" step="1" id="contrast-slide" />
+                        </label><br />
+                        <label class="effect-label">Emboss (Strength)<br />
+                            <input autocomplete="off" type="range" min="-1" max="1" value="0" class="slider" step="0.1" id="emboss-slide-strength" />
+                        </label><br />
+                        <label class="effect-label">Emboss (White Level)<br />
+                            <input autocomplete="off" type="range" min="-1" max="1" value="0" class="slider" step="0.1" id="emboss-slide-white" />
+                        </label>
+                        </label><br />
+                        <label class="effect-label">Emboss (Direction)<br />
+                            <button value="left" class="pure-button btn emboss-dir">Left</button>
+                            <button value="right" class="pure-button btn emboss-dir">Right</button>
+                            <button value="top" class="pure-button btn emboss-dir">Top</button>
+                            <button value="bottom" class="pure-button btn emboss-dir">Bottom</button>
+                        </label><br />
+                        <label class="effect-label">Emboss (Blend)<br />
+                            <input autocomplete ="off" type="checkbox" id="emboss-blend" />
+                        </label><br />
+                        <label class="effect-label">Enhance<br />
+                            <input autocomplete="off" type="range" min="-1" max="1" value="0" class="slider" step="0.1" id="enhance-slide" />
+                        </label>                    
+                        </label><br />
+                        <label class="effect-label">One-Time Effects</label><br />
+                            <button class="pure-button btn" id="grayscale">Apply Grayscale</button><br /> 
+                            <button class="pure-button btn" id="invert">Invert</button><br />  
+                            <button class="pure-button btn" id="sepia">Sepia</button><br />
+                            <button class="pure-button btn" id="solarize">Solarize</button> 
+                        <!-- </label><br />
+                        <label class="effect-label">Value (HSV)<br />
+                            <input autocomplete="off" type="range" min="0" max="360" value="0" class="slider" step="0.1" id="value" />
+                        </label>                     -->
+                        
+                        
+                        
+                        
+                        
+                        <!-- <button value="grayscale" class="pure-button btn konva-effect">Grayscale</button> -->
+                        <!-- <button value="paint" class="pure-button btn konva-effect">Paint Image</button> -->
+                    </div>
+    
+                    <div class="konva-group">
+                        <label class="effect-label">HSL (Hue)<br />
+                            <input autocomplete="off" type="range" min="0" max="259" value="0" class="slider" step="0.5" id="luminance-h" />
+                        </label><br />
+                        <label class="effect-label">HSL (Saturation)<br />
+                            <input autocomplete="off" type="range" min="-2" max="10" value="0" class="slider" step="0.5" id="luminance-s" />
+                        </label><br />
+                        <label class="effect-label">HSL (Luminance)<br />
+                            <input autocomplete="off" type="range" min="-2" max="2" value="0" class="slider" step="0.1" id="luminance-l" />
+                        </label><br />
+                        <label class="effect-label">HSV (Hue)<br />
+                            <input autocomplete="off" type="range" min="0" max="259" value="0" class="slider" step="0.5" id="hsv-h" />
+                        </label><br />
+                        <label class="effect-label">HSV (Saturation)<br />
+                            <input autocomplete="off" type="range" min="-2" max="10" value="0" class="slider" step="0.5" id="hsv-s" />
+                        </label><br />
+                        <label class="effect-label">HSV (Value)<br />
+                            <input autocomplete="off" type="range" min="-2" max="2" value="0" class="slider" step="0.1" id="hsv-l" />
+                        </label><br />
+                        <label class="effect-label">Mask<br />
+                            <input autocomplete="off" type="range" min="0" max="300" value="0" class="slider" step="1" id="mask" />
+                        </label><br />
+                        <label class="effect-label">Noise<br />
+                            <input autocomplete="off" type="range" min="0" max="4" value="0" class="slider" step="0.1" id="noise" />
+                        </label><br />
+                        <label class="effect-label">Pixelate<br />
+                            <input autocomplete="off" type="range" min="1" max="20" value="0" class="slider" step="1" id="pixelate" />
+                        </label><br />
+                        <label class="effect-label">Posterize<br />
+                            <input autocomplete="off" type="range" min="0" max="1" value="0" class="slider" step="0.1" id="posterize" />
+                        </label>
+                        
+                    </div>
+                    <div class="konva-group">
+                        <label class="effect-label">RGB (Red)<br />
+                            <input autocomplete="off" type="range" min="0" max="256" value="150" class="slider" step="1" id="rgb-r" />
+                        </label><br /> 
+                        <label class="effect-label">RGB (Green)<br />
+                            <input autocomplete="off" type="range" min="0" max="256" value="150" class="slider" step="1" id="rgb-g" />
+                        </label><br /> 
+                        <label class="effect-label">RGB (Blue)<br />
+                            <input autocomplete="off" type="range" min="0" max="256" value="150" class="slider" step="1" id="rgb-b" />
+                        </label><br /> 
+                        <label class="effect-label">RGBA (Red)<br />
+                            <input autocomplete="off" type="range" min="0" max="256" value="150" class="slider" step="1" id="rgba-r" />
+                        </label><br /> 
+                        <label class="effect-label">RGBA (Green)<br />
+                            <input autocomplete="off" type="range" min="0" max="256" value="150" class="slider" step="1" id="rgba-g" />
+                        </label><br /> 
+                        <label class="effect-label">RGBA (Blue)<br />
+                            <input autocomplete="off" type="range" min="0" max="256" value="150" class="slider" step="1" id="rgba-b" />
+                        </label><br /> 
+                        <label class="effect-label">RGBA (Alpha)<br />
+                            <input autocomplete="off" type="range" min="0" max="1" value="0" class="slider" step="0.1" id="rgba-a" />
+                        </label><br /> 
+                       <label class="effect-label">Threshold<br />
+                            <input autocomplete="off" type="range" min="0" max="1" value="0" class="slider" step="0.1" id="threshold" />
+                        </label><br />  
+                    </div>
                 </div>
+                
                 <pre>Export</pre>
                 <div class="button-group">
                     

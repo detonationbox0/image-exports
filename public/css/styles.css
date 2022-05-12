@@ -54,3 +54,46 @@
     align-items: center;
     justify-content: center;
 }
+
+#konva-stuff {
+    display:flex;
+}
+
+#output-preview {
+    position:absolute;
+    top: 0; right: 0; bottom: 0; left: 0;
+    /* background-color:rgba(31, 141, 214,.8); */
+    z-index:1001;
+    display:none;
+    align-items: center;
+    justify-content: center;
+    flex-direction:column;
+    /* opacity: 0.8; */
+    background-color: #ffffff;
+/* opacity: 0.8; */
+    background-image:  repeating-linear-gradient(45deg, #f7f7f7 25%, transparent 25%, transparent 75%, #f7f7f7 75%, #f7f7f7), repeating-linear-gradient(45deg, #f7f7f7 25%, #ffffff 25%, #ffffff 75%, #f7f7f7 75%, #f7f7f7);
+    background-position: 0 0, 10px 10px;
+    background-size: 20px 20px;
+}
+
+#without-button {
+    display:flex;
+    flex-direction:row;
+}
+
+.img {
+    width: 500px;
+    height: 100%;
+    /* background-color:lightblue; */
+    margin:10px;
+}
+
+.img-preview {
+    max-width:100%;
+    max-height:100%;
+    border:1px solid red;
+}
+
+.dim {
+    color:#0078e7;
+}
