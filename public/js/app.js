@@ -729,6 +729,61 @@ $(document).on("click", "#download", function() {
 //#endregion
 });
 
+/**
+ * -----------------------------------------------------------------------------------
+ * User clicks Make Proof button 
+ * -----------------------------------------------------------------------------------
+ */
+$(document).on("click", "#files", () => {
+    $("#wait").css("display", "flex"); 
+    console.log("Let's make all of the files...")
+    // Hide the guides first...
+    hideGuides();
+
+    // Get the PNG file as dataURL
+    const dataURL = stage.toDataURL({ pixelRatio: 15 });
+    // Get what image is being used
+    const imgFile = $("#tshirt").attr("src");
+
+    // Assume an x and y coordinate to map onto the shirt image
+    const [x, y] = [$("#canvas").css("left"), $("#canvas").css("top")];
+
+    // What should the 4500px be scaled to to match the current width of the canvas?
+    s = $("#canvas").width() / 4500;
+
+    // Get the rgb of the shirt
+    let rgb = $("#tshirt").css("background-color")
+    rgb = rgb.replace("rgb(", "");
+    rgb = rgb.replace(")", "")
+    rgb = rgb.replace(/\s/g, '')
+
+
+   // Make object to send to back end
+    const obj =  {
+        dataURL:dataURL,
+        imgFile: imgFile,
+        x: x,
+        y: y,
+        s: s,
+        rgb: rgb
+    }
+
+    console.log(obj)
+    
+    $.post("/files", obj).done(function(res) {
+        console.log(res);
+        $("#wait").hide();
+
+        
+ 
+        // $("#output-preview").css("display", "flex");
+    });
+    showGuides();
+
+})
+
+
+
 function resetImages(callback) {
     // Make the image files update
     var d = new Date();

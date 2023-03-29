@@ -5,6 +5,10 @@ var im = require('imagemagick-composite');
 var sizeOf = require('image-size'); // Could be done with ImageMagick, but this is easier
 var path = require('path');
 var fs = require('fs');
+var client = require('https')
+var {spawn} = require('child_process');
+
+
 // var exiftool = require('node-exiftool');
 // const { Z_PARTIAL_FLUSH } = require('zlib');
 // const { runMain } = require('module');
@@ -456,6 +460,153 @@ app.post("/export", (req, res) => {
 
 });
 
+app.post("/files", async (req, res) => {
+
+    // console.log("Exporting file...");
+
+    var imageBuffer = decodeBase64Image(req.body.dataURL);
+    // fs.writeFileSync('data.' + ext, buffer);
+    var fullFile = `${__dirname}/process/CanvasOutput.png`;
+    var trimFile = `${__dirname}/process/TrimmedPrint.png`;
+    var shirtFile = `${__dirname}/process/Shirt.png`;
+    var outFile = `${__dirname}/process/Proof.png`;
+
+    var x = req.body.x.replace("px", "");
+    var y = req.body.y.replace("px", "");;
+    var s = req.body.s;
+
+    var rgb = req.body.rgb
+
+
+
+    // Create the PNG files
+    // console.log(`Writing ${fullFile}`);
+   
+    const status = await myWriteFile(fullFile, "undefined", imageBuffer);
+
+    // Download the shirt image to a file
+    // https://scrapingant.com/blog/download-image-javascript
+    client.get(req.body.imgFile, (clientRes) => {
+        clientRes.pipe(fs.createWriteStream(shirtFile))
+
+
+        // Execute python to make proof file
+        /**
+         * What we need:
+                ✔ shirtFile = sys.argv[1]  # Path to the thumbnail of the shirt from editor
+                ✔ artFile = sys.argv[2]  # Path to the full-size output from the canvas
+                ✔ outFile = sys.argv[3]  # Path to the final proof PNG thumbnail
+                x = int(sys.argv[4])  # Number of pixels from the left of the shirt to position the art
+                y = int(sys.argv[5])  # Number of pixels from the top of the shirt to position the art
+                s = float(sys.argv[6])  # Scale of the image in relation to the shirt
+                bgColor = sys.argv[7].split(",")  # RGB of shirt's color (ex: 255,255,255)
+         */
+        var pyFile = `${__dirname}/makeShirtProofs.py`
+        var args = [
+            pyFile,
+            shirtFile,
+            fullFile,
+            outFile,
+            x,
+            y,
+            s,
+            rgb 
+        ]
+
+        console.log("Executing python...")
+        const python = spawn('python3', args);
+
+        python.stdout.on('data', (data) => {
+            console.log("stdout says", stdout)
+        })
+
+        python.stderr.on('data', (data) => {
+
+            console.log(data.toString());
+        });
+
+        python.on("close", (rtn) => {
+            // All done. Return to sender
+            console.log("Python says", rtn)
+            console.log("Python is done. Returning to sender.")
+
+            // Trigger print file creation async process here.
+            var args = [
+                fullFile,
+                "-trim",
+                "+repage",
+                trimFile
+            ];
+            console.log(`Trimming ${fullFile}`)
+            im.convert(args, function(err, stdout) {
+                if (err) {
+                    console.log(err);
+                    reject(err)
+                };
+            });
+
+            res.send(status)
+
+        })
+
+        console.log("args", args)
+
+
+    })
+
+
+
+});
+
+
+/**
+ * Asynchronous function to generate the print files
+ * @param {String} fullFile Full path to full sized file
+ * @param {String} trimFile Full path to trimmed image output
+ * @param {Buffer} imageBuffer Decoded Base 64 Image
+ * @returns Promise
+ */
+async function myWriteFile(fullFile, trimFile, imageBuffer) {
+    return new Promise((resolve, reject) => {
+
+        fs.writeFile(fullFile , imageBuffer.data, function(err) { 
+            if (err) {
+                console.log(err);
+                reject(err)
+            };
+    
+    
+            console.log("Done.");
+    
+            if (trimFile != "undefined") {
+            // Trim the image
+                    // convert Original.png -trim +repage Trimmed.png
+                    var args = [
+                        fullFile,
+                        "-trim",
+                        "+repage",
+                        trimFile
+                    ];
+                    console.log(`Trimming ${fullFile}`)
+                    im.convert(args, function(err, stdout) {
+                        if (err) {
+                            console.log(err);
+                            reject(err)
+                        };
+
+                        resolve("Done")
+                
+                    });
+            } else {
+                resolve("Done")
+            }
+           
+    
+            
+        });
+    })
+}
+
 /**
  * Decode Base64 Image
  * https://stackoverflow.com/questions/20267939/nodejs-write-base64-image-file
@@ -477,8 +628,8 @@ function decodeBase64Image(dataString) {
   }
   
 
-app.listen(3000, function() {
-    console.log("Server is running on http://localhost:3000...")
+app.listen(3001, function() {
+    console.log("Server is running on http://localhost:3001...")
 });
 
 /* I couldn't get this one to work. */
