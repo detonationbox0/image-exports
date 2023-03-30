@@ -536,24 +536,6 @@ function addImage(url) {
 
         // Possible Effects
         imgNode.cache();
-        // imgNode.filters([Konva.Filters.Blur]);
-        // imgNode.filters([Konva.Filters.Brighten]);
-        // imgNode.filters([Konva.Filters.Contrast]);
-        // imgNode.filters([Konva.Filters.Emboss]);
-        // imgNode.filters([Konva.Filters.Enhance]);
-        // imgNode.filters([Konva.Filters.Grayscale]);
-        // imgNode.filters([Konva.Filters.HSL]);
-        // imgNode.filters([Konva.Filters.HSV]);
-        // imgNode.filters([Konva.Filters.Invert]);
-        // imgNode.filters([Konva.Filters.Mask]);
-        // imgNode.filters([Konva.Filters.Noise]);
-        // imgNode.filters([Konva.Filters.Pixelate]);
-        // imgNode.filters([Konva.Filters.Posterize]);
-        // imgNode.filters([Konva.Filters.RGB]);
-        // imgNode.filters([Konva.Filters.RGBA]);
-        // imgNode.filters([Konva.Filters.Sepia]);
-        // imgNode.filters([Konva.Filters.Solarize]);
-        // imgNode.filters([Konva.Filters.Threshold]);
 
         // Add the Image Node to the Layer
         layer.add(imgNode);
