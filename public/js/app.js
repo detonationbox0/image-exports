@@ -773,11 +773,11 @@ $(document).on("click", "#files", () => {
     $.post("/files", obj).done(function(res) {
         console.log(res);
         $("#wait").hide();
-
         
  
-        // $("#output-preview").css("display", "flex");
     });
+
+    
     showGuides();
 
 })

@@ -35,10 +35,9 @@ app.post("/render", (req, res) => {
 
     var imagePath = `${__dirname}/public/${req.body.image}`; // image from Konva in the front end
     var fileName = req.body.image.split('.').slice(0, -1).join('.');
-    var outFileName = `${__dirname}/public/render/${Math.random().toString().substring(2, 8)}.png`;
+    // OS Friendly Path
+    var outFileName = path.join(__dirname, "public", "render", Math.random().toString().substring(2, 8) + ".png");
 
-
-    // console.log(`${__dirname}/public/${imagePath}`);
     console.log(req.body.effect);
 
     switch(req.body.effect) {
@@ -57,7 +56,7 @@ app.post("/render", (req, res) => {
                 }
 
                 console.log(`Converted. Feeding back: ${path.basename(outFileName)}`);
-                res.send(`render/${path.basename(outFileName)}`);
+                res.send(path.join("render", path.basename(outFileName)));
             });
 
             break;
@@ -74,7 +73,7 @@ app.post("/render", (req, res) => {
                     return;
                 }
                 console.log(`Converted. Feeding back: ${path.basename(outFileName)}`);
-                res.send(`render/${path.basename(outFileName)}`);
+                res.send(path.join("render", path.basename(outFileName)));
             });
 
             break;
@@ -91,7 +90,7 @@ app.post("/render", (req, res) => {
                     return;
                 }
                 console.log(`Converted. Feeding back: ${path.basename(outFileName)}`);
-                res.send(`render/${path.basename(outFileName)}`);
+                res.send(path.join("render", path.basename(outFileName)));
             }); 
 
             break;
@@ -108,7 +107,7 @@ app.post("/render", (req, res) => {
                     return;
                 }
                 console.log(`Converted. Feeding back: ${path.basename(outFileName)}`);
-                res.send(`render/${path.basename(outFileName)}`);
+                res.send(path.join("render", path.basename(outFileName)));
             }); 
 
             break;
@@ -125,7 +124,7 @@ app.post("/render", (req, res) => {
                     return;
                 }
                 console.log(`Converted. Feeding back: ${path.basename(outFileName)}`);
-                res.send(`render/${path.basename(outFileName)}`);
+                res.send(path.join("render", path.basename(outFileName)));
             }); 
 
             break;
@@ -142,7 +141,7 @@ app.post("/render", (req, res) => {
                     return;
                 }
                 console.log(`Converted. Feeding back: ${path.basename(outFileName)}`);
-                res.send(`render/${path.basename(outFileName)}`);
+                res.send(path.join("render", path.basename(outFileName)));
             }); 
 
             break;
@@ -156,7 +155,7 @@ app.post("/render", (req, res) => {
             var w = dims.width;
             var h = dims.height;
 
-            var mapPath = `${__dirname}/public/render/map.png`;
+            var mapPath = path.join(__dirname, "public", "render", "map.png")
             // Displacement map
             var mArgs = [
                 "-size", `${w}x${h}`,
@@ -183,7 +182,7 @@ app.post("/render", (req, res) => {
                         console.log(err); return;
                     }
                     console.log(`STDOUT:${stdout}`);
-                    res.send(`render/${path.basename(outFileName)}`);
+                    res.send(path.join("render", path.basename(outFileName)));
                 })
 
                 
@@ -226,8 +225,8 @@ app.post("/render", (req, res) => {
                 };
 
                 // Blurred image copy:
-                var blurPath = `${__dirname}/public/render/blur.png`; 
-                var noisePath = `${__dirname}/public/render/noise.png`; 
+                var blurPath = path.join(__dirname, "public", "render", "blur.png")
+                var noisePath = path.join(__dirname, "public", "render", "noise.png")
                 
                 // Step 1: Make a blurred copy of then input image
                 var args = [
@@ -276,7 +275,7 @@ app.post("/render", (req, res) => {
                             if (err) { console.log(err); return } 
 
                             // Send back to front end
-                            res.send(`render/${path.basename(outFileName)}`)
+                            res.send(path.join("render", path.basename(outFileName)))
                         })
                         
                     })
@@ -300,7 +299,7 @@ app.post("/render", (req, res) => {
 
                 // First, make grayscale
 
-                var grayPath = `${__dirname}/public/render/gray.png`; 
+                var grayPath = path.join(__dirname, "public", "render", "gray.png")
 
                 var args = [
                     "-quiet",
@@ -346,7 +345,7 @@ app.post("/render", (req, res) => {
                         if (err) { console.log(err); return }; 
 
                         // Send back to front end
-                        res.send(`render/${path.basename(outFileName)}`)
+                        res.send(path.join("render", path.basename(outFileName)))
 
                     });
 
@@ -378,7 +377,7 @@ app.post("/render", (req, res) => {
 
             im.convert(args, function(err, stdout) {
                 if (err) { console.log(err); return }
-                res.send(`render/${path.basename(outFileName)}`)
+                res.send(path.join("render", path.basename(outFileName)))
             })
 
             break;
@@ -401,10 +400,10 @@ app.post("/convert", (req, res) => {
     var filename = file.split('.').slice(0, -1).join('.');
     // var png 
     var ext = file.split(".").pop();
-    var inFile  = `${__dirname}/public/${file}` + ((ext == "psd") ? "[0]" : ""); // PSD layers get exported. Without [0], there's 50 png files made. The first one is the PSD itself.
-    var outFile = `${__dirname}/public/${filename}.png`;
+    var inFile = path.join(__dirname, "public", (ext == "psd") ? "[0]" : "")
+    var outFile = path.join(__dirname, "public", filename + ".png")
 
-    im.convert([inFile, `${__dirname}/public/${filename}.png`], function(err, stdout) {
+    im.convert([inFile, outFile], function(err, stdout) {
         if (err) {
             console.log(err);
             return;
@@ -429,8 +428,8 @@ app.post("/export", (req, res) => {
 
     var imageBuffer = decodeBase64Image(req.body.dataURL);
     // fs.writeFileSync('data.' + ext, buffer);
-    var fullFile = `${__dirname}/public/Front_Original.png`;
-    var trimFile = `${__dirname}/public/Front_Trim.png`;
+    var fullFile = path.join(__dirname, "public", "Front_Original.png")
+    var trimFile = path.join(__dirname, "public", "Front_Trim.png")
 
     // Write the file
     console.log(`Writing ${fullFile}`);
@@ -466,10 +465,11 @@ app.post("/files", async (req, res) => {
 
     var imageBuffer = decodeBase64Image(req.body.dataURL);
     // fs.writeFileSync('data.' + ext, buffer);
-    var fullFile = `${__dirname}/process/CanvasOutput.png`;
-    var trimFile = `${__dirname}/process/TrimmedPrint.png`;
-    var shirtFile = `${__dirname}/process/Shirt.png`;
-    var outFile = `${__dirname}/process/Proof.png`;
+
+    var fullFile = path.join(__dirname, "process", "CanvasOutput.png")
+    var trimFile = path.join(__dirname, "process", "TrimmedPrint.png")
+    var shirtFile = path.join(__dirname, "process", "Shirt.png")
+    var outFile = path.join(__dirname, "process", "Proof.png")
 
     var x = req.body.x.replace("px", "");
     var y = req.body.y.replace("px", "");;
@@ -501,7 +501,7 @@ app.post("/files", async (req, res) => {
                 s = float(sys.argv[6])  # Scale of the image in relation to the shirt
                 bgColor = sys.argv[7].split(",")  # RGB of shirt's color (ex: 255,255,255)
          */
-        var pyFile = `${__dirname}/makeShirtProofs.py`
+        var pyFile = path.join(__dirname, "makeShirtProofs.py")
         var args = [
             pyFile,
             shirtFile,
@@ -694,7 +694,7 @@ app.listen(3001, function() {
         //             if (err) { console.log(err); return }; 
 
         //                 // Send back to front end
-        //             res.send(`render/${path.basename(outFileName)}`)
+        //             res.send(path.join("render", path.basename(outFileName)))
         //         })
 
         //     });
@@ -820,7 +820,7 @@ app.listen(3001, function() {
         //         im.convert(args, function(err, stdout) {
         //             if (err) {console.log(err); return};
 
-        //             res.send(`render/${path.basename(outFileName)}`)
+        //             res.send(path.join("render", path.basename(outFileName)))
 
         //         })
 
