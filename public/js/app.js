@@ -74,23 +74,23 @@ $(document).on("click", "#files", () => {
     // Everything we need is loaded in to obj
     console.log("Object", obj)
 
-    console.log("Downloading the shirt image...")
     say("Downloading the shirt image...")
     $.post("/download-image", obj)
         .then(() => {
-            console.log("Creating the Canvas file...")
             say("Creating the canvas file...") 
             return $.post("/canvas-file", obj)
         })
         .then(() => {
-            console.log("Making proof and thumbnail...")
-            say("Making proof and thumbnail...") 
+            say("Making proof and thumbnail...")
             return $.post("/python", obj)
         })
-        .then(() => {
-            console.log("Triggering print file production.")
+        .then((p) => {
             // Release browser back to user.
             $("#wait").css("display", "none");
+
+            if (p === false) {
+                alert("Something went wrong executing the python process. Make sure python3 is installed and available in your PATH. Make sure PIL (pillow) is installed and available globally.\nhttps://pypi.org/project/Pillow/")
+            }
 
             // Show the thumbnail, link to the PDF
             let d = new Date();
@@ -116,8 +116,9 @@ $(document).on("click", "#files", () => {
 
 })
 
-// Useful for logging to the loading screen
+// Useful for logging to the console and loading screen
 function say(what) {
+    console.log(what)
     $("#loading-message").text(what);
 }
 

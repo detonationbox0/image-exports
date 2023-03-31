@@ -87,6 +87,8 @@ app.post("/python", async (req, res) => {
         ]
 
         console.log("Executing python...")
+
+
         const python = spawn('python3', args);
 
         python.stderr.on('data', (data) => {
